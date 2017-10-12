@@ -97,6 +97,12 @@ public class OekakiActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btnEraser:
                 mDrawSurfaceView.setToolEraser();
                 break;
+            case R.id.undo:
+                mDrawSurfaceView.undo();
+                break;
+            case R.id.redo:
+                mDrawSurfaceView.redo();
+                break;
         }
     }
 

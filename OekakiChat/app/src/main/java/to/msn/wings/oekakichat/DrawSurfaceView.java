@@ -58,7 +58,7 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     DrawData mDrawData = null;
 
     float scale;
-
+    //描画の重なり
     private Context parent;
 
     private Utils mUtils;
@@ -191,9 +191,10 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private void sendDrawing(DrawData drawData) {
 
         // 通信処理
-        final NCMBObject obj = new NCMBObject("DrawingClass");
+        NCMBObject obj = new NCMBObject("DrawingClass");
         obj.put("projectId", 1);//とりあえず
         obj.put("userId", 1);//とりあえず
+        obj.put("state", 1);//0表示しない:1表示する
         obj.put("fontSize", drawData.getFontSize());
         obj.put("fontColor", drawData.getFontColor());
         JSONArray pathArray = new JSONArray();
@@ -243,7 +244,7 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                     int resultsSize = results.size();
                     for (int i = 0; i < resultsSize; i++) {
                         data = results.get(i);
-                        remoteDrawLine(data.getInt("toolCategory"), data.getString("fontColor"), data.getInt("fontSize"), data.getJSONArray("path"));
+                        remoteDrawLine(data.getInt("toolCategory"), data.getString("fontColor"), data.getInt("fontSize"), data.getJSONArray("path"),data.getInt("state"));
                     }
                     mUtils.progressDismiss();
                 }
@@ -259,7 +260,7 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
      * @param pathArray
      */
 
-    private void remoteDrawLine(int category, String fontColor, int fontSize, JSONArray pathArray) {
+    private void remoteDrawLine(int category, String fontColor, int fontSize, JSONArray pathArray, int state) {
         //ツールの切り替え
         switch (category) {
             case TOOL_ERASER:
@@ -300,9 +301,11 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                 e3.printStackTrace();
             }
         }
-        //線の描画
-        drawLine(path);
-        mLastDrawCanvas.drawPath(path, mPaint);
+        if (state == 1){
+            //線の描画
+            drawLine(path);
+            mLastDrawCanvas.drawPath(path, mPaint);
+        }
     }
 
     /**
@@ -351,6 +354,73 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         //init();
         getDrawing();
     }
+
+    /**
+     * undo
+     */
+    public void undo() {
+        Log.e("エラー","ステイと");
+        NCMBQuery<NCMBObject> query = new NCMBQuery<>("DrawingClass");
+        //データを昇順で取得するためのフィールドを設定
+        query.addOrderByAscending("objectId");
+        //状態が1
+        query.whereEqualTo("state",1);
+        //データを降順で取得するためのフィールドを設定
+
+
+        query.findInBackground(new FindCallback<NCMBObject>() {
+            NCMBObject obj = new NCMBObject("DrawingClass");
+            @Override
+            public void done(List<NCMBObject> results, NCMBException e) {
+                if (e != null) {
+                    //検索失敗時の処理
+                    Log.e("エラー","ステイと");
+                } else {
+                    //検索成功時の処理
+                    try {
+                        obj.increment("state", 0);
+                    } catch (NCMBException e1) {
+                        Log.e("エラー","ステイと2");
+                    }
+                }
+                mUtils.progressDismiss();
+            }
+        });
+        sync();
+    }
+
+    /**
+     * redo
+     */
+    public void redo() {
+        NCMBQuery<NCMBObject> query = new NCMBQuery<>("DrawingClass");
+        //データを昇順で取得するためのフィールドを設定
+        //query.addOrderByAscending("objectId");
+        //状態が0
+        query.whereEqualTo("state",0);
+        //データを降順で取得するためのフィールドを設定
+        query.addOrderByDescending("objectId");
+
+        query.findInBackground(new FindCallback<NCMBObject>() {
+            NCMBObject obj = new NCMBObject("DrawingClass");
+            @Override
+            public void done(List<NCMBObject> results, NCMBException e) {
+                if (e != null) {
+                    //検索失敗時の処理
+                } else {
+                    //検索成功時の処理
+                    try {
+                        obj.increment("state", 1);
+                    } catch (NCMBException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                mUtils.progressDismiss();
+            }
+        });
+        //getDrawing();
+    }
+
 
     /**
      * 消しゴム（OekakiActivityから呼び出し用）
