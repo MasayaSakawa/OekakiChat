@@ -5,6 +5,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="フォントサイズ" />
+
+        <Spinner
+            android:id="@+id/spFontSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#aaa"
+            android:spinnerMode="dropdown">
+
+        </Spinner>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="フォントカラー" />
+
+        <Spinner
+            android:id="@+id/spFontColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#aaa"
+            android:spinnerMode="dropdown">
+
+        </Spinner>
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="wrap_content"
@@ -15,6 +52,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/undo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:text="UNDO" />
+
+        <Button
+            android:id="@+id/redo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onClick"
+            android:text="REDO" />
 
         <Button
             android:id="@+id/btnSync"
@@ -47,43 +100,6 @@
             android:layout_weight="1"
             android:onClick="onClick"
             android:text="ペン"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="フォントサイズ"/>
-
-        <Spinner
-            android:id="@+id/spFontSize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#aaa"
-            android:spinnerMode="dropdown">
-
-        </Spinner>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="フォントカラー"/>
-
-        <Spinner
-            android:id="@+id/spFontColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#aaa"
-            android:spinnerMode="dropdown">
-
-        </Spinner>
-
     </LinearLayout>
 
 </LinearLayout>
