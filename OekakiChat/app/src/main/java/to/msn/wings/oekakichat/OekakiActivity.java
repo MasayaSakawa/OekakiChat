@@ -1,11 +1,19 @@
 package to.msn.wings.oekakichat;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.nifty.cloud.mb.core.NCMB;
@@ -16,6 +24,12 @@ import to.msn.wings.oekakichat.api.ApiDrawingConfig;
 public class OekakiActivity extends AppCompatActivity implements View.OnClickListener {
 
     DrawSurfaceView mDrawSurfaceView;
+    CustomImageView mCustomImageView;
+    static FrameLayout linearLayout;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +40,14 @@ public class OekakiActivity extends AppCompatActivity implements View.OnClickLis
 
         mDrawSurfaceView = new DrawSurfaceView(this);
 
-        FrameLayout linearLayout = (FrameLayout) findViewById(R.id.frameLayout);
+
+        mCustomImageView = new CustomImageView(this);
+        mCustomImageView.setImageResource(R.drawable.tech_pjin_icon);
+
+
+        linearLayout = (FrameLayout) findViewById(R.id.frameLayout);
+
+        linearLayout.addView(mCustomImageView);
         linearLayout.addView(mDrawSurfaceView);
 
 
@@ -79,10 +100,14 @@ public class OekakiActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
         spFontColor.setAdapter(fontColorAdapter);
+
+
+
     }
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.btnSync:
                 mDrawSurfaceView.sync();
@@ -97,14 +122,28 @@ public class OekakiActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btnEraser:
                 mDrawSurfaceView.setToolEraser();
                 break;
-            case R.id.undo:
-                mDrawSurfaceView.undo();
+//            case R.id.undo:
+//                mDrawSurfaceView.undo();
+//                break;
+//            case R.id.redo:
+//                mDrawSurfaceView.redo();
+//                break;
+            case R.id.draw:
+                mCustomImageView.setTranslationZ(0);
+
                 break;
-            case R.id.redo:
-                mDrawSurfaceView.redo();
+            case R.id.pinch:
+                mCustomImageView.setTranslationZ(10);
                 break;
         }
     }
+
+    public void setScale(float scale){
+        linearLayout.setScaleX(scale);
+        linearLayout.setScaleY(scale);
+    }
+
+
 
 }
 

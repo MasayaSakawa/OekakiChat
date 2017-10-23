@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.nifty.cloud.mb.core.DoneCallback;
 import com.nifty.cloud.mb.core.FindCallback;
@@ -28,9 +29,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by h.takahashi on 2017/07/04.
- */
 
 public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -359,28 +357,31 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
      * undo
      */
     public void undo() {
-        Log.e("エラー","ステイと");
         NCMBQuery<NCMBObject> query = new NCMBQuery<>("DrawingClass");
         //データを昇順で取得するためのフィールドを設定
-        query.addOrderByAscending("objectId");
+        query.addOrderByAscending("state");
         //状態が1
         query.whereEqualTo("state",1);
         //データを降順で取得するためのフィールドを設定
 
 
         query.findInBackground(new FindCallback<NCMBObject>() {
-            NCMBObject obj = new NCMBObject("DrawingClass");
+
             @Override
             public void done(List<NCMBObject> results, NCMBException e) {
+                NCMBObject obj = new NCMBObject("DrawingClass");
                 if (e != null) {
                     //検索失敗時の処理
-                    Log.e("エラー","ステイと");
                 } else {
                     //検索成功時の処理
                     try {
-                        obj.increment("state", 0);
+                        NCMBObject data = results.get(0);
+                        String mObjectId = data.getString("objectId");
+                        String mState =  data.getString("state");
+                        obj.increment("state",0);
+                        Log.e("エラー","検索成功" + mObjectId + mState);
                     } catch (NCMBException e1) {
-                        Log.e("エラー","ステイと2");
+                        Log.e("エラー","検索失敗");
                     }
                 }
                 mUtils.progressDismiss();
@@ -399,7 +400,7 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         //状態が0
         query.whereEqualTo("state",0);
         //データを降順で取得するためのフィールドを設定
-        query.addOrderByDescending("objectId");
+        query.addOrderByDescending("state");
 
         query.findInBackground(new FindCallback<NCMBObject>() {
             NCMBObject obj = new NCMBObject("DrawingClass");
@@ -450,6 +451,8 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
     }
+
+
 
     /**
      * 描画データを全て削除して同期する
