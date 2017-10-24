@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callback ,Runnable {
 
     final float VIEW_WIDTH = 400;
     final float VIEW_HEIGHT = 600;
