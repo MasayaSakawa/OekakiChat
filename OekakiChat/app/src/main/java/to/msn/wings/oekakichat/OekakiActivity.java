@@ -1,19 +1,11 @@
 package to.msn.wings.oekakichat;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.nifty.cloud.mb.core.NCMB;
@@ -41,13 +33,13 @@ public class OekakiActivity extends AppCompatActivity implements View.OnClickLis
         mDrawSurfaceView = new DrawSurfaceView(this);
 
 
-        mCustomImageView = new CustomImageView(this);
-        mCustomImageView.setImageResource(R.drawable.tech_pjin_icon);
+//        mCustomImageView = new CustomImageView(this);
+//        mCustomImageView.setImageResource(R.drawable.tech_pjin_icon);
 
 
         linearLayout = (FrameLayout) findViewById(R.id.frameLayout);
 
-        linearLayout.addView(mCustomImageView);
+        //linearLayout.addView(mCustomImageView);
         linearLayout.addView(mDrawSurfaceView);
 
 

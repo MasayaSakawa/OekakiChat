@@ -1,7 +1,9 @@
 package to.msn.wings.oekakichat;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,7 +16,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import com.nifty.cloud.mb.core.DoneCallback;
 import com.nifty.cloud.mb.core.FindCallback;
@@ -30,7 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callback ,Runnable {
+public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable  {
+
+    Resources res = this.getContext().getResources();
+    Bitmap gazou = BitmapFactory.decodeResource(res, R.drawable.tech_pjin_icon);
 
     final float VIEW_WIDTH = 400;
     final float VIEW_HEIGHT = 600;
@@ -94,6 +98,13 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
         // ペンを設定します。
         setToolPen();
+    }
+
+    @Override
+    public void run() {
+        mCanvas = mHolder.lockCanvas();
+        mCanvas.drawBitmap(gazou,0,0,null);
+        mHolder.unlockCanvasAndPost(mCanvas);
     }
 
     @Override
@@ -518,6 +529,8 @@ public class DrawSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         mFontColor = fontColor;
         mPaint.setColor(Color.parseColor(fontColor));
     }
+
+
 }
 
 /**
